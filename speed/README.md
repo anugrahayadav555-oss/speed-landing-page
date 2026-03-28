@@ -5,7 +5,7 @@ Welcome to the **SPEED Performance Landing Page**, a high-performance, futuristi
 ## Features
 - **Scroll-Driven 3D Animation**: A breathtaking hero section that scrubs through 240 frames of a 3D bike render linked directly to the user's scroll position.
 - **Interactive 3D Tilt Cards**: The Bike Showcase section features dynamically tilting glassmorphism cards that respond to raw mouse coordinates for realistic spatial parallax.
-- **Futuristic UI/UX**: Custom-tailored dark mode aesthetics (deep dark backgrounds, neon blue, and electric red accents) utilizing TailWind CSS alongside "Orbitron" and "Inter" Google Fonts.
+- **Futuristic UI/UX**: Custom-tailored dark mode aesthetics (deep dark backgrounds, neon blue, and electric red accents) utilizing Tailwind CSS alongside "Orbitron" and "Inter" Google Fonts.
 
 ## Tech Stack
 - **Framework**: React + Vite
