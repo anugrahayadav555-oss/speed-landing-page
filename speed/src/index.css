@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-blue: #00f0ff;
+  --color-neon-blue-light: #5cffff;
+  --color-electric-red: #ff003c;
+  --color-deep-dark: #0B0F14;
+
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+/* Base styles focusing on the dark theme */
+body {
+  background-color: var(--color-deep-dark);
+  color: white;
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-orbitron);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-deep-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neon-blue);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-blue-light);
+}
+
+/* Utility to ensure absolute positioning respects overflow */
+.clip-wrap {
+  overflow: hidden;
+  position: relative;
+}
