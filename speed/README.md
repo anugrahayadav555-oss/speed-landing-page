@@ -1,16 +1,29 @@
-# React + Vite
+# SPEED Performance Landing Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **SPEED Performance Landing Page**, a high-performance, futuristic website built to showcase next-generation hardware. This project leverages a modern web stack to create an immersive, responsive, and visually stunning user experience.
 
-Currently, two official plugins are available:
+## Features
+- **Scroll-Driven 3D Animation**: A breathtaking hero section that scrubs through 240 frames of a 3D bike render linked directly to the user's scroll position.
+- **Interactive 3D Tilt Cards**: The Bike Showcase section features dynamically tilting glassmorphism cards that respond to raw mouse coordinates for realistic spatial parallax.
+- **Futuristic UI/UX**: Custom-tailored dark mode aesthetics (deep dark backgrounds, neon blue, and electric red accents) utilizing Tailwind CSS alongside "Orbitron" and "Inter" Google Fonts.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- **Framework**: React + Vite
+- **Styling**: Tailwind CSS v4
+- **Animations**: GSAP (ScrollTrigger) & Framer Motion
+- **Icons**: Lucide React
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Live Preview
+To interact with the animations locally, navigate to `http://localhost:5173/` in your browser.
