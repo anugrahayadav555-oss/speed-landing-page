@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring, useMotionTemplate } from 'framer-motion';
 
 const bikes = [
     {
@@ -22,13 +22,34 @@ const bikes = [
 function InteractiveCard({ bike }) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
+    const hoverAmount = useMotionValue(0);
 
-    const springConfig = { damping: 30, stiffness: 200, mass: 0.5 };
-    const springX = useSpring(mouseX, springConfig);
-    const springY = useSpring(mouseY, springConfig);
+    // Exact Emil Kowalski spring from guidelines for mouse tracking
+    const mouseSpring = { stiffness: 100, damping: 10 };
+    const springX = useSpring(mouseX, mouseSpring);
+    const springY = useSpring(mouseY, mouseSpring);
+    
+    // Apple's recommended approach for natural scaling/hover transitions
+    const hoverSpring = useSpring(hoverAmount, { bounce: 0.2, duration: 0.5 });
 
-    const tiltX = useTransform(springY, [-300, 300], [10, -10]);
-    const tiltY = useTransform(springX, [-300, 300], [-10, 10]);
+    // Map mouse position into rotation degrees (~15 deg max tilt)
+    const rotateX = useTransform(springY, [-300, 300], [15, -15]);
+    const rotateY = useTransform(springX, [-300, 300], [-15, 15]);
+
+    // Spring-driven Scale 
+    const scale = useTransform(hoverSpring, [0, 1], [1, 1.05]);
+    
+    // Hardware accelerated transform string using useMotionTemplate (per Emil's guidelines)
+    // By combining these into a single string, we ensure GPU acceleration and prevent main thread frame drops
+    const transform = useMotionTemplate`rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+    
+    // Dynamic Shadow mapping (shifts opposite to the tilt direction to simulate light source)
+    const shadowX = useTransform(springX, [-300, 300], [-30, 30]);
+    const shadowY = useTransform(springY, [-300, 300], [-30, 30]);
+    const shadowBlur = useTransform(hoverSpring, [0, 1], [0, 50]);
+    const shadowOpacity = useTransform(hoverSpring, [0, 1], [0, 0.4]);
+    
+    const dynamicShadow = useMotionTemplate`${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowOpacity})`;
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -36,7 +57,12 @@ function InteractiveCard({ bike }) {
         mouseY.set(e.clientY - rect.top - rect.height / 2);
     };
 
+    const handleMouseEnter = () => {
+        hoverAmount.set(1);
+    };
+
     const handleMouseLeave = () => {
+        hoverAmount.set(0);
         mouseX.set(0);
         mouseY.set(0);
     };
@@ -45,14 +71,23 @@ function InteractiveCard({ bike }) {
         <div
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
             className="w-full h-full cursor-pointer relative block"
+            style={{ perspective: "1200px", transformStyle: "preserve-3d" }}
         >
             <motion.div 
-                style={{ rotateX: tiltX, rotateY: tiltY, transformStyle: "preserve-3d" }}
-                className={`relative w-full h-full p-8 md:p-12 rounded-3xl border border-white/5 bg-gradient-to-br ${bike.color} backdrop-blur-md transition-colors duration-500 hover:border-white/20 shadow-2xl overflow-hidden`}
+                style={{ 
+                    transform,  // Full string = Hardware acceleration
+                    boxShadow: dynamicShadow,
+                    transformStyle: "preserve-3d" 
+                }}
+                className={`relative w-full h-full p-8 md:p-12 rounded-3xl border border-white/5 bg-gradient-to-br ${bike.color} backdrop-blur-md transition-colors duration-500 hover:border-white/20 overflow-hidden`}
             >
                 {/* Glowing background blob */}
-                <div className={`absolute -top-32 -right-32 w-64 h-64 bg-current opacity-30 blur-[100px] rounded-full pointer-events-none ${bike.accent}`}></div>
+                <motion.div 
+                    style={{ opacity: useTransform(hoverSpring, [0, 1], [0.3, 0.6]) }}
+                    className={`absolute -top-32 -right-32 w-64 h-64 bg-current blur-[100px] rounded-full pointer-events-none transition-colors duration-500 ${bike.accent}`}
+                ></motion.div>
 
                 <div style={{ transform: "translateZ(50px)" }} className="relative z-10 flex flex-col h-full">
                     <h3 className={`text-4xl md:text-5xl font-black font-orbitron ${bike.accent} mb-6 tracking-tight`}>{bike.name}</h3>
@@ -71,7 +106,10 @@ function InteractiveCard({ bike }) {
                 </div>
                 
                 {/* Glossy overlay effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none mix-blend-overlay"></div>
+                <motion.div 
+                    style={{ opacity: hoverSpring }}
+                    className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-3xl pointer-events-none mix-blend-overlay"
+                ></motion.div>
             </motion.div>
         </div>
     );
